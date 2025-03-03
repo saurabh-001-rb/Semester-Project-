@@ -1,0 +1,23 @@
+Semester Project - II
+Abstract 
+
+1. Title :-  AI-Powered Chatbot: Emulating Human Conversation
+2. Domain :-
+ Artificial Intelligence, Natural Language Processing
+3. Application :-
+ Customer Support, Virtual Assistance, Personalized AI Interaction
+4. Expected Algorithm / Processing :-
+  NLP, Machine Learning, Deep Learning (GPT-based models)
+5. Expected Output from Project:- 
+ A chatbot that provides human-like responses, context-aware communication, and multilingual support.
+6. Abstract 
+The AI-Driven Chatbot for Natural Conversations is designed to improve virtual assistance by analyzing previous interactions and delivering responses tailored to users. Unlike conventional chatbots that generate generic replies, this system utilizes Natural Language Processing (NLP) and Machine Learning (ML) to simulate human-like discussions.
+By understanding the context of conversations, the chatbot provides relevant responses and supports multiple languages, making it ideal for customer service, virtual assistance, and automation. It is developed using Python, AI models (such as OpenAI GPT), and cloud-based storage to process chat history effectively.
+The project follows a phased development approach, starting with basic NLP implementation, progressing to context-aware responses, and incorporating continuous learning enhancements. Future improvements will focus on advanced personalization, broader language support, and real-world deployment.
+This chatbot bridges the gap between conventional AI assistants and human interaction, delivering a more intelligent, adaptive, and engaging user experience.
+
+Team Members:
+1.	Saurabh Devidas Badgujar (SY DS-37-221106037)
+2.	Dhanshri Prakash Chavan (SY DS-26-2211027)
+3.	Anant Nana Deore (SY DS-40-221106040)
+4.	Riya Manoj Deshmukh (SY DS-45-221106045)
