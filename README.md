@@ -38,4 +38,5 @@ The **AI-Driven Chatbot for Natural Conversations** is designed to enhance virtu
 - Deployment in real-world applications  
 ---
 💡 *This chatbot bridges the gap between conventional AI assistants and human interaction, providing a more intelligent, adaptive, and engaging user experience.* 
-*~commited by - Deore Anant*
+
+*commited by ~ Deore Anant*
