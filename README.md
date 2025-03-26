@@ -36,9 +36,5 @@ The **AI-Driven Chatbot for Natural Conversations** is designed to enhance virtu
 - Improved personalization for enhanced user experience  
 - Expansion to multiple platforms and industries  
 - Deployment in real-world applications  
-
-## 📜 License
-This project is open-source and available for contributions. Feel free to fork and improve it!  
-
 ---
 💡 *This chatbot bridges the gap between conventional AI assistants and human interaction, providing a more intelligent, adaptive, and engaging user experience.*  
