@@ -1,16 +1,31 @@
 import pyautogui
 import time
 import pyperclip
-import google.generativeai as genai  # Correct import
+import google.generativeai as genai  # type: ignore # Correct import
 
-# Set up Gemini API
-genai.configure(api_key="AIzaSyCohTBXo8rbb-An7WWMIom2hEGfy1ma6dA")  # Replace with your actual API key
+# Set up Gemini API (Replace with your actual API key)
+genai.configure(api_key="AIzaSyCohTBXo8rbb-An7WWMIom2hEGfy1ma6dA")
+
+# Global variable to track last message
+last_message = ""
 
 # Function to generate response
 def generate_reply(message):
-    model = genai.GenerativeModel("gemini-1.5-flash")  # Use the latest available model
+    global last_message
+    model = genai.GenerativeModel("gemini-1.5-flash")  # Using the latest available model
     response = model.generate_content(message)
-    return response.text.strip() if response else "Sorry, I couldn't understand."
+    
+    if response and hasattr(response, "text"):
+        reply_text = response.text.strip().split("\n")[0]  # Take only the first meaningful line
+
+        # Prevent repeating the same message
+        if reply_text == last_message:
+            return "🤔 Kai tari navin bol na!"
+        
+        last_message = reply_text  # Store last message
+        return reply_text
+    else:
+        return "🤔 Nusta blank msg pathavlas ka?"
 
 # Step 1: Copy the message from WhatsApp
 time.sleep(1)
@@ -25,44 +40,42 @@ time.sleep(1)
 copied_text = pyperclip.paste()
 print("Copied text:", copied_text)
 
-copied_text = pyperclip.paste()
-print("Copied text:", copied_text)
+# Step 3: Define the WhatsApp-style prompt
+whatsapp_prompt = f"""
+Generate a natural, short, smart WhatsApp response in **only one language** (Marathi, Hindi, or English) based on the following message:
 
-whatsapp_prompt = f"""Generate a natural Responce only in Marathi OR Hindi last or in English any one language, human-like WhatsApp response to the following message:  
+**Message:** {copied_text}  
 
-Message: {copied_text}  
+### **Guidelines:**
+- Keep it short, natural, and engaging.
+- **DO NOT** repeat the user's message in the response.
+- **DO NOT** add unnecessary details or explanations.
+- **DO NOT** sound robotic; keep it casual, like a real WhatsApp chat.
+- Use natural abbreviations, emojis (if needed), and friendly tones.
+- If it's a **question**, answer briefly but **smartly**.
+- If it's a **casual message**, respond in a natural, engaging way.
 
-Your response should sound like a casual text message from a real person, using informal language, abbreviations, emojis (if needed), and natural chat expressions. Keep it short, natural, and engaging. Avoid overly formal or robotic phrasing.  
+### **Examples:**
+1️⃣ **Message:** "Bbye gn🤓"  
+   ✅ **Reply:** "Itkya lavkar gn😂🥲"  
 
-- If the message is very short (e.g., "ok", "hmm", "gn"), reply with a quick, natural acknowledgment.  
-- If the message is part of a conversation, respond in a way that continues the flow.  
-- If the message is a question, reply in a way a friend would, keeping it casual.  
+2️⃣ **Message:** "What’s the weather like today?"  
+   ✅ **Reply:** "Kuthay aahes? Baghto mg update deto"  
 
-### Examples:  
+3️⃣ **Message:** "Aaj ka plan kya hai?"  
+   ✅ **Reply:** "Kalach fix nahi zhala re, boltu mg"  
 
-1️⃣ Message: "Bbye gn🤓
-"  
-   Reply: "Itkya lavkar gn😂🥲"  
+4️⃣ **Message:** "Tell me a joke."  
+   ✅ **Reply:** "😂 Aai mhanti chaha ghe, me mhanto net slow ahe!"  
 
-2️⃣ Message: "Bghel jaude"  
-   Reply: "Ho tech nn, bagh ata tine tula sangitla"  
+Generate a **single, short, natural** reply that fits the message context.
+"""
 
-3️⃣ Message: "Hello! How can you assist me today?"  
-   Reply: "Bol na, kay help pahije?"  
-
-4️⃣ Message: "What’s the weather like today?"  
-   Reply: "Kuthay aahes? Baghto mg update deto"  
-
-5️⃣ Message: "Tell me a joke."  
-   Reply: "😂 Aai mhanti chaha ghe, me mhanto net slow ahe!"  
-
-Maintain the same tone and style as a real WhatsApp chat between friends or acquaintances. Avoid generic AI-sounding responses—make it feel personal and engaging."""
-
-# Step 3: Generate AI response
+# Step 4: Generate AI response
 reply = generate_reply(whatsapp_prompt)
 print("Generated Reply:", reply)
 
-# Step 4: Send the reply back to WhatsApp
+# Step 5: Send the reply back to WhatsApp
 pyautogui.click(1185, 736)  # Click on chat input box
 time.sleep(1)
 pyperclip.copy(reply)  # Copy reply to clipboard
