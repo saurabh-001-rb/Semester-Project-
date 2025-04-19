@@ -1,14 +1,23 @@
 import streamlit as st
 import pyautogui
-import time
 import pyperclip
+import time
 import google.generativeai as genai
 
-# Set your actual Gemini API key
-genai.configure(api_key="YOUR_API_KEY_HERE")
+# ─────────────────────────────────────────────────────
+# CONFIGURATION
+genai.configure(api_key="YOUR_API_KEY_HERE")  # Replace with your API key
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-# Session states to store data
+# ─────────────────────────────────────────────────────
+# STREAMLIT PAGE SETTINGS
+st.set_page_config(page_title="WhatsApp Chatbot", layout="wide")
+st.title("🤖💬 WhatsApp AI Chatbot")
+st.caption("Auto-reply bot powered by Google Gemini + Streamlit UI")
+st.markdown("---")
+
+# ─────────────────────────────────────────────────────
+# SESSION STATE INIT
 if "message" not in st.session_state:
     st.session_state.message = ""
 if "reply" not in st.session_state:
@@ -16,86 +25,97 @@ if "reply" not in st.session_state:
 if "last_sent_reply" not in st.session_state:
     st.session_state.last_sent_reply = ""
 
-# Function to fetch the latest WhatsApp message
+# ─────────────────────────────────────────────────────
+# FUNCTION TO FETCH LATEST MESSAGE FROM WHATSAPP
 def fetch_message_from_whatsapp():
     try:
-        pyautogui.click(1302, 1055)  # Click on WhatsApp
-        time.sleep(1.5)
+        pyautogui.click(1302, 1055)  # Focus WhatsApp window (adjust coords)
+        time.sleep(1.2)
         pyautogui.moveTo(757, 190)
-        pyautogui.dragTo(1689, 939, duration=1.0, button='left')  # Select chat
-        pyautogui.hotkey('ctrl', 'c')  # Copy
+        pyautogui.dragTo(1689, 939, duration=1.0, button='left')
+        pyautogui.hotkey('ctrl', 'c')
         time.sleep(0.5)
         return pyperclip.paste()
     except Exception as e:
-        return f"Error fetching message: {e}"
+        return f"⚠️ Error fetching message: {e}"
 
-# Function to generate reply using Gemini
-def generate_reply_with_gemini(user_message):
+# ─────────────────────────────────────────────────────
+# FUNCTION TO GENERATE GEMINI REPLY
+def generate_reply_with_gemini(message):
     prompt = f"""
-Generate a natural, short, smart WhatsApp response in **only one language** (Marathi, Hindi, or English) based on the following message:
+Generate a natural, short, smart WhatsApp response in **Marathi, Hindi, or English**:
 
-**Message:** {user_message}  
+**Message:** {message}  
 
-### **Guidelines:**
-- Keep it short, natural, and engaging.
-- **DO NOT** repeat the user's message in the response.
-- **DO NOT** add unnecessary details or explanations.
-- **DO NOT** sound robotic; keep it casual, like a real WhatsApp chat.
-- Use natural abbreviations, emojis (if needed), and friendly tones.
-- If it's a **question**, answer briefly but **smartly**.
-- If it's a **casual message**, respond in a natural, engaging way.
+### Guidelines:
+- Be friendly and casual (like real chat)
+- Use only ONE language
+- Keep it SHORT and NATURAL
+- Use emojis/slang when needed
+- Don’t repeat or explain message
 """
     try:
         response = model.generate_content(prompt)
         if hasattr(response, "text"):
             return response.text.strip().split("\n")[0]
-        else:
-            return "🤔 Kai tari problem ahe reply madhe..."
+        return "🤔 Blank reply received."
     except Exception as e:
-        return f"Error generating reply: {e}"
+        return f"⚠️ Error generating reply: {e}"
 
-# Function to send reply back to WhatsApp
+# ─────────────────────────────────────────────────────
+# FUNCTION TO SEND MESSAGE TO WHATSAPP
 def send_reply_to_whatsapp(reply):
     try:
-        pyautogui.click(1185, 736)  # Click message input
+        pyautogui.click(1185, 736)
         time.sleep(0.5)
         pyperclip.copy(reply)
-        pyautogui.hotkey('ctrl', 'v')  # Paste
-        time.sleep(0.5)
-        pyautogui.press('enter')  # Send
+        pyautogui.hotkey('ctrl', 'v')
+        time.sleep(0.4)
+        pyautogui.press('enter')
         st.session_state.last_sent_reply = reply
-        return "✅ Reply sent!"
+        return "✅ Reply sent to WhatsApp!"
     except Exception as e:
-        return f"Error sending reply: {e}"
+        return f"⚠️ Error sending message: {e}"
 
-# Streamlit UI
-st.title("💬 WhatsApp Chatbot Dashboard")
+# ─────────────────────────────────────────────────────
+# MAIN UI LAYOUT
+col1, col2 = st.columns(2)
 
-st.markdown("This tool lets you fetch, respond, and send replies to WhatsApp chats using Google Gemini AI.")
+with col1:
+    st.subheader("📥 Step 1: Fetch Message")
+    if st.button("Fetch Latest Message"):
+        st.session_state.message = fetch_message_from_whatsapp()
+        st.success("Message fetched successfully!")
 
-# Step 1: Fetch message
-if st.button("📥 Fetch Message"):
-    st.session_state.message = fetch_message_from_whatsapp()
-    st.success("Fetched latest WhatsApp message.")
+    if st.session_state.message:
+        st.text_area("Incoming Message", st.session_state.message, height=150)
 
-# Display fetched message
-if st.session_state.message:
-    st.text_area("📨 Latest Message", st.session_state.message, height=100)
+with col2:
+    st.subheader("⚡ Step 2: Generate Reply")
+    if st.session_state.message and st.button("Generate AI Reply"):
+        st.session_state.reply = generate_reply_with_gemini(st.session_state.message)
+        st.success("Reply generated with Gemini AI")
 
-# Step 2: Generate reply
-if st.session_state.message and st.button("⚡ Generate AI Reply"):
-    st.session_state.reply = generate_reply_with_gemini(st.session_state.message)
-    st.success("Generated reply using Gemini.")
+    if st.session_state.reply:
+        st.text_area("AI Reply", st.session_state.reply, height=150)
 
-# Display AI reply
-if st.session_state.reply:
-    st.text_area("🤖 AI Reply", st.session_state.reply, height=100)
-
-# Step 3: Send reply
+# SEND BUTTON AT BOTTOM
+st.markdown("---")
 if st.session_state.reply and st.button("📤 Send Reply to WhatsApp"):
     result = send_reply_to_whatsapp(st.session_state.reply)
     st.success(result)
 
-# Last sent reply
+# Show last sent reply
 if st.session_state.last_sent_reply:
     st.markdown(f"🕓 **Last Sent Reply:** _{st.session_state.last_sent_reply}_")
+
+# Optional Instructions Expander
+with st.expander("ℹ️ How It Works"):
+    st.markdown("""
+    1. **Click "Fetch Message"**: It copies the latest message from the WhatsApp window.
+    2. **Click "Generate Reply"**: It sends the message to Gemini AI and gets a smart reply.
+    3. **Click "Send Reply"**: It pastes the reply into WhatsApp and presses Enter to send.
+
+    > Make sure WhatsApp is **open** and positioned as expected (or adjust pyautogui coordinates).
+    """)
+
