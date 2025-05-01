@@ -1,8 +1,12 @@
 import pyautogui
+import time
+
+print("🖱 Move your mouse to a blank area inside the WhatsApp chat and wait...")
+time.sleep(5)
 
 while True:
-    a = pyautogui.position()
-    print(a)
+    print("📍 Current mouse position:", pyautogui.position())
+    time.sleep(1)
     
     
 
