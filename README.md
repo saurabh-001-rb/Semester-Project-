@@ -3,11 +3,11 @@
 ## 📌 Project Overview
 The **AI-Driven Chatbot for Natural Conversations** is designed to enhance virtual assistance by analyzing previous interactions and generating context-aware responses. Unlike traditional chatbots that provide generic replies, this system leverages **Natural Language Processing (NLP)** and **Machine Learning (ML)** to simulate human-like discussions.
 
-## 🚀 Domain
+## 🚀 Domains
 - **Artificial Intelligence (AI)**
 - **Natural Language Processing (NLP)**
 
-## 🎯 Application
+## 🎯 Applications
 - Customer Support  
 - Virtual Assistance  
 - Personalized AI Interaction
