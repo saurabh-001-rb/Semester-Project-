@@ -1,4 +1,4 @@
- **Introduction**  :
+ ## Introduction :
 
 The AI-Powered Chatbot for Human-Like Conversations is designed to enhance virtual 
 communication by providing personalized, intelligent, and multilingual interactions. 
@@ -20,9 +20,9 @@ only enhance user engagement and satisfaction but also automate repetitive tasks
 reducing the need for human intervention in common queries.
 
 
-**Problem Statement**: 
+## Problem Statement: 
 
-## Traditional Chatbots vs. AI-Powered Chatbots
+ # **Traditional Chatbots vs. AI-Powered Chatbots
 
 Traditional chatbots often provide generic, rule-based responses that lack 
 personalization and context-awareness. They cannot analyze past conversations 
@@ -106,7 +106,7 @@ user satisfaction while reducing the need for human intervention.
 
 
 
-**Conclusion**:
+## Conclusion:
 Our project, the AI-powered chatbot, is set to redefine the landscape  
 of human-computer interactions. By focusing on context-aware communication,  
 multilingual support, and human-like responses, the chatbot will provide a  
