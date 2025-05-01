@@ -54,7 +54,7 @@ user satisfaction while reducing the need for human intervention.
 
 ![flowchart](C:\Users\admin\Desktop\Sem project\Semester-Project-\docs\flowchart for first implementation.jpg)
 
-# Methodology
+## Methodology
 1)Architecture Design: Designed a modular architecture with separate layers for input processing, model inference, and response generation.
 2)Modeling: A GPT-based deep learning model is fine-tuned on conversational data to enable generative responses.
 3)Testing: Functional and usability testing is conducted to ensure accuracy and relevance of responses.
