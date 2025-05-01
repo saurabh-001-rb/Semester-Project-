@@ -16,7 +16,7 @@ By understanding the context of conversations, the chatbot provides relevant res
 The project follows a phased development approach, starting with basic NLP implementation, progressing to context-aware responses, and incorporating continuous learning enhancements. Future improvements will focus on advanced personalization, broader language support, and real-world deployment.
 This chatbot bridges the gap between conventional AI assistants and human interaction, delivering a more intelligent, adaptive, and engaging user experience.
 
-Team Members:
+*Team Members:
 1.	Saurabh Devidas Badgujar (SY DS-37-221106037)
 2.	Dhanshri Prakash Chavan (SY DS-26-2211027)
 3.	Anant Nana Deore (SY DS-40-221106040)
