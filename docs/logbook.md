@@ -22,7 +22,7 @@ reducing the need for human intervention in common queries.
 
 ## Problem Statement: 
 
- # **Traditional Chatbots vs. AI-Powered Chatbots
+ ## Traditional Chatbots vs. AI-Powered Chatbots
 
 Traditional chatbots often provide generic, rule-based responses that lack 
 personalization and context-awareness. They cannot analyze past conversations 
