@@ -70,4 +70,4 @@ python src/chatbot_ui.py
 - Add voice/sentiment capabilities 
 
 💡 *This chatbot bridges the gap between conventional AI assistants and human interaction, providing a more intelligent, adaptive, and engaging user experience.*  
-*commited by ~ Deore Anant*
+*commited by ~ Dhanshri Chavhan*
