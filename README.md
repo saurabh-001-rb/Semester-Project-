@@ -6,6 +6,9 @@ The **AI-Driven Chatbot for Natural Conversations** is designed to enhance virtu
 ## 🚀 Domains
 - **Artificial Intelligence (AI)**
 - **Natural Language Processing (NLP)**
+- **Machine Learning (ML)**
+- **Deep Learning**
+- **Human-Computer Interaction (HCI)**
 
 ## 🎯 Applications
 - Customer Support  
