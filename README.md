@@ -16,7 +16,6 @@ The **AI-Driven Chatbot for Natural Conversations** is designed to enhance virtu
 
 ## 🔍 Technologies & Algorithms
 - **Python 3.8+**
-- **Natural Language Processing (NLP)**
 - **Machine Learning (ML)**
 - **Deep Learning (GPT-based models)**
 - **AI Frameworks**
