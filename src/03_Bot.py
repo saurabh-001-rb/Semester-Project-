@@ -28,7 +28,7 @@ last_reply = ""
 
 # === WhatsApp focus once ===
 print("📲 Focusing WhatsApp window...")
-pyautogui.click(1252, 1053)  # Replace with WhatsApp window position
+pyautogui.click(1221, 1050)  # Replace with WhatsApp window position
 time.sleep(1)
 
 # ✅ Replace this with your safe neutral coordinate found from step 1

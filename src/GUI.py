@@ -4,6 +4,7 @@ import pyperclip
 import google.generativeai as genai
 import time
 import threading
+import re
 
 # === Gemini Setup ===
 genai.configure(api_key="AIzaSyCohTBXo8rbb-An7WWMIom2hEGfy1ma6dA")  # Replace with your real API key
@@ -26,8 +27,8 @@ Rules:
 # === Global State ===
 last_full_chat = ""
 last_reply = ""
-bot_stop_event = threading.Event()
 bot_thread = None
+bot_stop_event = None
 
 # === Thread-safe log storage ===
 log_history = []
@@ -41,30 +42,49 @@ def update_log(message):
             log_history.pop(0)
 
 # === Coordinates ===
-WHATSAPP_CLICK_POINT = (1252, 1053)
+WHATSAPP_CLICK_POINT = (1221, 1050)
 NEUTRAL_CLICK_POINT = (1100, 400)
 INPUT_BOX_COORDINATE = (842, 971)
 
-# === Function to get chat text ===
-def get_chat_text():
+# === Function to generate reply from Gemini ===
+def generate_reply(message):
+    global last_reply
     try:
-        print("📲 Focusing WhatsApp window...")
-        pyautogui.click(WHATSAPP_CLICK_POINT)
-        time.sleep(2)
+        # Remove timestamp and name from message
+        cleaned = re.sub(r"^\[\d{1,2}:\d{2},\s*\d{1,2}/\d{1,2}/\d{4}\]\s*\w+:?\s*", "", message).strip()
+        response = chat.send_message(cleaned)
+        if response and hasattr(response, "text"):
+            reply = response.text.strip().split("\n")[0]
+            if reply == last_reply or "no response" in reply.lower():
+                return None
+            last_reply = reply
+            return reply
+    except Exception as e:
+        print("❌ Error in generate_reply():", e)
+    return None
 
+# === Function to get chat text ===
+def get_chat_text(chat_opened):
+    try:
+        if not chat_opened:
+            print("📲 First-time: Click WhatsApp icon")
+            pyautogui.click(WHATSAPP_CLICK_POINT)
+            time.sleep(2)
+
+        # Always perform drag-to-select
         pyautogui.moveTo(784, 205)
         time.sleep(0.3)
         pyautogui.mouseDown()
         time.sleep(0.2)
         pyautogui.moveTo(1780, 971, duration=1.5)
         pyautogui.mouseUp()
+        time.sleep(0.5)
 
-        time.sleep(0.3)
         pyautogui.hotkey('ctrl', 'c')
-        time.sleep(0.7)
+        time.sleep(1.0)
 
         pyautogui.click(NEUTRAL_CLICK_POINT)
-        time.sleep(0.2)
+        time.sleep(0.5)
 
         chat_text = pyperclip.paste().strip()
         print("📋 Copied chat length:", len(chat_text))
@@ -74,26 +94,18 @@ def get_chat_text():
         print("❌ Error in get_chat_text():", e)
         return ""
 
-# === Gemini response ===
-def generate_reply(message):
-    global last_reply
-    response = chat.send_message(message)
-    if response and hasattr(response, "text"):
-        reply = response.text.strip().split("\n")[0]
-        if reply == last_reply or "no response" in reply.lower():
-            return None
-        last_reply = reply
-        return reply
-    return None
-
 # === Bot Loop Thread ===
-def bot_loop(log_callback):
+def bot_loop(log_callback, stop_event):
     global last_full_chat
+    chat_opened = False
     log_callback("📡 Bot is monitoring WhatsApp...")
 
-    while not bot_stop_event.is_set():
+    while not stop_event.is_set():
         try:
-            current_chat = get_chat_text()
+            current_chat = get_chat_text(chat_opened)
+            if not chat_opened:
+                chat_opened = True
+                log_callback("✅ WhatsApp chat window selected. Next loops will just copy.")
             log_callback("📋 Sample of chat: " + current_chat[:50])
 
             if current_chat != last_full_chat:
@@ -120,7 +132,7 @@ def bot_loop(log_callback):
                 last_full_chat = current_chat
             else:
                 log_callback("⏳ No new messages.")
-            time.sleep(5)
+            time.sleep(15)
 
         except Exception as e:
             log_callback(f"⚠️ Error: {e}")
@@ -138,15 +150,17 @@ if "status" not in st.session_state:
 # === Buttons ===
 if st.button("▶️ Start Bot"):
     if st.session_state.status == "Stopped":
-        bot_stop_event.clear()
-        bot_thread = threading.Thread(target=bot_loop, args=(update_log,))
+        bot_stop_event = threading.Event()
+        bot_thread = threading.Thread(target=bot_loop, args=(update_log, bot_stop_event))
         bot_thread.start()
         st.session_state.status = "Running"
+        st.session_state.bot_thread = bot_thread
+        st.session_state.bot_stop_event = bot_stop_event
         update_log("🚀 Bot started.")
 
 if st.button("⏹ Stop Bot"):
-    if st.session_state.status == "Running":
-        bot_stop_event.set()
+    if st.session_state.status == "Running" and "bot_stop_event" in st.session_state:
+        st.session_state.bot_stop_event.set()
         st.session_state.status = "Stopped"
         update_log("🛑 Stop requested. Bot will shut down shortly.")
 
