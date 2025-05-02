@@ -57,7 +57,7 @@ python src/chatbot_ui.py
 ├── README.md                 # Project overview
 
 ## 🏗️ Development Approach
-1. **Phase 1**: Basic NLP implementation  
+1. **Phase 1**: Basic implementation  
 2. **Phase 2**: Context-aware response development  
 3. **Phase 3**: Continuous learning and personalization enhancements  
 4. **Future Enhancements**: Advanced AI capabilities, broader language support, and real-world deployment, Multi-platform deployment, voice I/O, etc.  
